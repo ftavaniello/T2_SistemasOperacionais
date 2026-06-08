@@ -18,14 +18,17 @@ class Frame:
         self.ultimo_acesso = 0 #OPT: instante do último acesso (desempate LRU)
 
 
+
 class TabelaPaginas:
-    def __init__(self, num_frames):
+    def __init__(self, num_frames, referencias = None):
         # Inicializa a memória física com a quantidade de frames especificada
         self.frames = [Frame(i) for i in range(num_frames)]
         self.total_page_faults = 0
         self.total_acessos = 0
 
         self.tempo_global = 0 #É o clock lógico incrementado a cada acesso à memória
+        self.referencias = referencias or []
+        self.indice_atual = 0
 
     def acessar_pagina(self, numero_pagina):
         self.total_acessos += 1
