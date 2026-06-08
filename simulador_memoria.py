@@ -14,7 +14,8 @@ class Frame:
         self.id_frame = id_frame
         self.pagina_alocada = None  # Armazena o número da página ou None se estiver vazio
         # Dica para os alunos: vocês podem adicionar atributos aqui para ajudar no algoritmo (ex: timestamp, contador)
-        self.tempo_entrada = 0 #FIFO: usado pra identificar o instante em que a página foi carregada 
+        self.tempo_entrada = 0 #FIFO: usado pra identificar o instante em que a página foi carregada
+        self.ultimo_acesso = 0 #OPT: instante do último acesso (desempate LRU)
 
 
 class TabelaPaginas:
@@ -34,6 +35,7 @@ class TabelaPaginas:
             if frame.pagina_alocada == numero_pagina:
                 # TODO: Se necessário para o algoritmo (ex: LRU), atualize metadados aqui.
                 # para FIFO -> não precisa atualizar metadados no HIT pq a ordem de entrada não muda
+                frame.ultimo_acesso = self.tempo_global
                 return True, frame.id_frame  # Retorna (Hit=True, frame_id)
 
         # 2. Se não encontrou, ocorreu um Page Fault!
@@ -47,6 +49,7 @@ class TabelaPaginas:
                 
                 # FIFO -> registrar o instante da entrada 
                 frame.tempo_entrada = self.tempo_global
+                frame.ultimo_acesso = self.tempo_global
                 return False, frame.id_frame  # Retorna (Hit=False, frame_id)
 
         # 4. Memória cheia: Aplicar algoritmo de substituição de página
