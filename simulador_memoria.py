@@ -60,7 +60,7 @@ class TabelaPaginas:
         com base no algoritmo escolhido (FIFO ou LRU), atualizar o frame
         escolhido com a nova_pagina e retornar o ID do frame que foi alterado.
         """
-        frame_escolhido_id = 0
+        frame_escolhido_id = self._substituir_fifo(nova_pagina)
 
         # Escreva a lógica do algoritmo aqui...
 
@@ -68,6 +68,14 @@ class TabelaPaginas:
         # self.frames[frame_escolhido_id].pagina_alocada = nova_pagina
 
         return frame_escolhido_id
+    
+    def _substituir_fifo(self, nova_pagina):
+        # Algoritmo FIFO (First-In, First-Out):Evicta a página que foi carregada há mais tempo na memória (menor valor de tempo_entrada).
+        frame_vitima = min(self.frames, key=lambda f: f.tempo_entrada)
+        frame_vitima.pagina_alocada = nova_pagina
+        frame_vitima.tempo_entrada = self.tempo_global
+        frame_vitima.ultimo_acesso = self.tempo_global
+        return frame_vitima.id_frame
 
     def imprimir_mapa_memoria(self, passo, pagina_acessada, foi_hit, frame_alterado=None):
         """
