@@ -3,6 +3,8 @@
 ###
 ### Prof. Filipo - github.com/ProfessorFilipo/MemSim/
 ###
+### Grupo 3: FIFO vs. OPT (Ótimo) - 3 frames
+
 
 import sys
 
@@ -12,6 +14,7 @@ class Frame:
         self.id_frame = id_frame
         self.pagina_alocada = None  # Armazena o número da página ou None se estiver vazio
         # Dica para os alunos: vocês podem adicionar atributos aqui para ajudar no algoritmo (ex: timestamp, contador)
+        self.tempo_entrada = 0 #FIFO: usado pra identificar o instante em que a página foi carregada 
 
 
 class TabelaPaginas:
@@ -20,6 +23,8 @@ class TabelaPaginas:
         self.frames = [Frame(i) for i in range(num_frames)]
         self.total_page_faults = 0
         self.total_acessos = 0
+
+        self.tempo_global = 0 #É o clock lógico incrementado a cada acesso à memória
 
     def acessar_pagina(self, numero_pagina):
         self.total_acessos += 1
