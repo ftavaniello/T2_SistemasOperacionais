@@ -28,11 +28,12 @@ class TabelaPaginas:
 
     def acessar_pagina(self, numero_pagina):
         self.total_acessos += 1
-
+        self.tempo_global += 1 #temos que incrementar o clock lógico a cada acesso
         # 1. Verificar se a página já está em algum frame (Hit)
         for frame in self.frames:
             if frame.pagina_alocada == numero_pagina:
                 # TODO: Se necessário para o algoritmo (ex: LRU), atualize metadados aqui.
+                # para FIFO -> não precisa atualizar metadados no HIT pq a ordem de entrada não muda
                 return True, frame.id_frame  # Retorna (Hit=True, frame_id)
 
         # 2. Se não encontrou, ocorreu um Page Fault!
@@ -43,6 +44,9 @@ class TabelaPaginas:
             if frame.pagina_alocada is None:
                 frame.pagina_alocada = numero_pagina
                 # TODO: Se necessário para o algoritmo, inicialize metadados do frame aqui.
+                
+                # FIFO -> registrar o instante da entrada 
+                frame.tempo_entrada = self.tempo_global
                 return False, frame.id_frame  # Retorna (Hit=False, frame_id)
 
         # 4. Memória cheia: Aplicar algoritmo de substituição de página
