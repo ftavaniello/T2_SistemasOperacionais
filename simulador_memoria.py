@@ -83,6 +83,30 @@ class TabelaPaginas:
         frame_vitima.ultimo_acesso = self.tempo_global
         return frame_vitima.id_frame
 
+    def _substituir_opt(self, nova_pagina):
+        futuro = self.referencias[self.indice_atual:]
+        maior_distancia = -1
+        menor_ultimo_acesso = float('inf')
+        frame_vitima = None
+
+        for frame in self.frames:
+            try:
+                distancia = futuro.index(frame.pagina_alocada)
+            except ValueError:
+                distancia = float('inf')
+
+            if (distancia > maior_distancia or
+                    (distancia == maior_distancia and
+                     frame.ultimo_acesso < menor_ultimo_acesso)):
+                maior_distancia = distancia
+                menor_ultimo_acesso = frame.ultimo_acesso
+                frame_vitima = frame
+
+        frame_vitima.pagina_alocada = nova_pagina
+        frame_vitima.tempo_entrada = self.tempo_global
+        frame_vitima.ultimo_acesso = self.tempo_global
+        return frame_vitima.id_frame
+
     def imprimir_mapa_memoria(self, passo, pagina_acessada, foi_hit, frame_alterado=None):
         """
         TODO: IMPLEMENTAR PELO GRUPO
