@@ -20,14 +20,13 @@ class Frame:
 
 
 class TabelaPaginas:
-    def __init__(self, num_frames, algoritmo, referencias = None):
+    def __init__(self, num_frames, referencias = None):
         # Inicializa a memória física com a quantidade de frames especificada
         self.frames = [Frame(i) for i in range(num_frames)]
         self.total_page_faults = 0
         self.total_acessos = 0
 
         self.tempo_global = 0 #É o clock lógico incrementado a cada acesso à memória
-        self.algoritmo = algoritmo.upper()
         self.referencias = referencias or []
         self.indice_atual = 0
 
@@ -61,14 +60,20 @@ class TabelaPaginas:
         return False, frame_vitima_id
 
     def substituir_pagina(self, nova_pagina):
-        # Dispatcher: encaminha para o algoritmo de substituição escolhido na CLI.
-        if self.algoritmo == "FIFO":
-            return self._substituir_fifo(nova_pagina)
-        elif self.algoritmo == "OPT":
-            return self._substituir_opt(nova_pagina)
-        else:
-            print(f"Erro: Algoritmo '{self.algoritmo}' invalido. Use FIFO ou OPT.")
-            sys.exit(1)
+        """
+        TODO: IMPLEMENTAR PELO GRUPO
+        Esta função deve escolher uma página 'vítima' para ser substituída
+        com base no algoritmo escolhido (FIFO ou LRU), atualizar o frame
+        escolhido com a nova_pagina e retornar o ID do frame que foi alterado.
+        """
+        frame_escolhido_id = self._substituir_fifo(nova_pagina)
+
+        # Escreva a lógica do algoritmo aqui...
+
+        # Exemplo de atualização (substitua pela lógica real):
+        # self.frames[frame_escolhido_id].pagina_alocada = nova_pagina
+
+        return frame_escolhido_id
     
     def _substituir_fifo(self, nova_pagina):
         # Algoritmo FIFO (First-In, First-Out):Evicta a página que foi carregada há mais tempo na memória (menor valor de tempo_entrada).
@@ -142,18 +147,15 @@ class Simulador:
 
         # A primeira linha válida define o número de frames na memória RAM simulada
         num_frames = int(linhas[0])
-        referencias = [int(l) for l in linhas[1:]]
-
-        tabela_paginas = TabelaPaginas(num_frames, self.algoritmo, referencias)
+        tabela_paginas = TabelaPaginas(num_frames)
 
         print(f"Iniciando simulação com {num_frames} frames disponíveis.")
         print("=" * 40)
 
         # As linhas seguintes são a sequência de acessos às páginas
         passo = 1
-        for i, numero_pagina in enumerate(referencias):
-            # indice_atual aponta para o "futuro" usado pelo OPT (lookahead a partir do próximo acesso)
-            tabela_paginas.indice_atual = i + 1
+        for linha in linhas[1:]:
+            numero_pagina = int(linha)
 
             # Processa o acesso na tabela de páginas
             foi_hit, frame_id = tabela_paginas.acessar_pagina(numero_pagina)
