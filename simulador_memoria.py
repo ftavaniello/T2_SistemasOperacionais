@@ -126,9 +126,8 @@ class TabelaPaginas:
 
 
 class Simulador:
-    def __init__(self, caminho_arquivo, algoritmo):
+    def __init__(self, caminho_arquivo):
         self.caminho_arquivo = caminho_arquivo
-        self.algoritmo = algoritmo.upper()
 
     def executar(self):
         try:
@@ -175,18 +174,7 @@ class Simulador:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Uso:     python simulador_memoria.py <arquivo_entrada> <FIFO|OPT>")
-        print("Exemplo: python simulador_memoria.py entrada.txt FIFO")
-        print("         python simulador_memoria.py entrada.txt OPT")
-        sys.exit(1)
-
-    arquivo_entrada = sys.argv[1]
-    algoritmo = sys.argv[2].upper()
-
-    if algoritmo not in ("FIFO", "OPT"):
-        print(f"Erro: Algoritmo '{algoritmo}' invalido. Opcoes: FIFO, OPT.")
-        sys.exit(1)
-
-    simulador = Simulador(arquivo_entrada, algoritmo)
+    # Permite passar o arquivo de entrada por argumento de linha de comando ou usa um padrão
+    arquivo_entrada = sys.argv[1] if len(sys.argv) > 1 else "entrada.txt"
+    simulador = Simulador(arquivo_entrada)
     simulador.executar()
